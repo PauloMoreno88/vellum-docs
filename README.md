@@ -36,10 +36,6 @@ npm run serve   # http://localhost:4173
 
 ## Publicar
 
-```bash
-npm run deploy
-```
-
-Gera o site e envia para a branch `gh-pages`, que o GitHub Pages publica. Depois de editar, faça commit na `main` e rode o deploy.
+Todo push na `main` gera o site e publica no GitHub Pages (`.github/workflows/pages.yml`). O andamento aparece na aba Actions do repositório.
 
 Esta documentação é pública. Não coloque tokens, nomes de repositórios privados, URLs internas nem caminhos de máquinas.

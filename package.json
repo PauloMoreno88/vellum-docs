@@ -4,8 +4,7 @@
   "description": "Documentação do Vellum (motor de vídeos em quadro branco)",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "serve": "node scripts/build.mjs && node scripts/serve.mjs",
-    "deploy": "node scripts/deploy.mjs"
+    "serve": "node scripts/build.mjs && node scripts/serve.mjs"
   },
   "license": "UNLICENSED",
   "type": "module",

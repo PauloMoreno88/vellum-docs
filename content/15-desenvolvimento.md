@@ -76,4 +76,8 @@ Todo texto de tela vem do roteiro, do diretor ou dos arquivos de tradução. Pad
 
 ## Atualização do app
 
-O app instalado se atualiza sozinho a partir de releases publicados pela equipe: verifica ao abrir e a cada 4 horas, baixa só o que mudou e pede para instalar antes de continuar. Nunca reinicia durante uma geração. A publicação de uma versão é feita por quem mantém o app, com a versão incrementada em `desktop-app/package.json`.
+O app instalado se atualiza sozinho a partir de releases publicados pela equipe: verifica ao abrir e a cada 4 horas, baixa só o que mudou e pede para instalar antes de continuar. Nunca reinicia durante uma geração.
+
+:::regra Cada push na main vira uma atualização
+Um workflow do GitHub Actions roda a cada push na `main` do motor: aumenta o patch da versão do app, gera o instalador do Windows, publica a atualização e só então registra a versão nova na `main`. Commit que só muda documentação também gera atualização; junte as mudanças antes de enviar para a `main`.
+:::
