@@ -1,46 +1,40 @@
 /**
- * Publica o site: gera _site/ e envia para a branch gh-pages (GitHub Pages
- * lê dessa branch).
+ * Publica o site: gera _site/ e envia para a branch gh-pages, que o GitHub
+ * Pages publica.
  *
  *   npm run deploy
  *
- * Usa um worktree temporário da gh-pages, então a pasta de trabalho não muda.
+ * O site gerado vira um repositório temporário com um commit só, enviado com
+ * --force para a gh-pages: a branch guarda apenas a versão publicada, e a
+ * pasta de trabalho não muda.
  */
 
 import {execFileSync} from 'node:child_process';
-import {cpSync, existsSync, mkdtempSync, readdirSync, rmSync} from 'node:fs';
+import {cpSync, mkdtempSync, rmSync} from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const git = (args, cwd = root) => execFileSync('git', args, {cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'inherit']}).trim();
+const git = (args, cwd = root) => execFileSync('git', args, {cwd, encoding: 'utf8'}).trim();
 
 execFileSync(process.execPath, [path.join(root, 'scripts', 'build.mjs')], {stdio: 'inherit'});
 
+const remote = git(['remote', 'get-url', 'origin']);
 const source = git(['rev-parse', '--short', 'HEAD']);
+// Mesma credencial configurada neste repositório (ex.: gh auth git-credential).
+const helper = (() => {
+  try { return git(['config', '--get', 'credential.https://github.com.helper']); } catch { return ''; }
+})();
+
 const work = mkdtempSync(path.join(os.tmpdir(), 'vellum-docs-pages-'));
-const hasRemoteBranch = git(['ls-remote', '--heads', 'origin', 'gh-pages']).length > 0;
-if (hasRemoteBranch) {
-  git(['fetch', 'origin', 'gh-pages']);
-  git(['worktree', 'add', '-f', work, 'FETCH_HEAD']);
-} else {
-  git(['worktree', 'add', '-f', '--detach', work]);
-  git(['checkout', '--orphan', 'gh-pages-tmp'], work);
-}
 try {
-  for (const entry of readdirSync(work)) if (entry !== '.git') rmSync(path.join(work, entry), {recursive: true, force: true});
   cpSync(path.join(root, '_site'), work, {recursive: true});
+  git(['init', '-q', '-b', 'gh-pages'], work);
   git(['add', '-A'], work);
-  const changed = git(['status', '--porcelain'], work);
-  if (!changed) {
-    console.log('Nada mudou no site.');
-  } else {
-    git(['commit', '-q', '-m', `Publica a documentação (${source})`], work);
-    git(['push', 'origin', 'HEAD:gh-pages'], work);
-    console.log('Publicado na branch gh-pages.');
-  }
+  git(['-c', 'user.name=Vellum docs', '-c', 'user.email=docs@vellum.local', 'commit', '-q', '-m', `Publica a documentação (${source})`], work);
+  git([...(helper ? ['-c', 'credential.helper=', '-c', `credential.helper=${helper}`] : []), 'push', '-q', '--force', remote, 'gh-pages'], work);
+  console.log(`Publicado na branch gh-pages (${source}).`);
 } finally {
-  git(['worktree', 'remove', '--force', work]);
-  if (existsSync(work)) rmSync(work, {recursive: true, force: true});
+  rmSync(work, {recursive: true, force: true});
 }
