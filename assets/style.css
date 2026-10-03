@@ -1,0 +1,339 @@
+/*
+ * Vellum docs. Quadro branco frio, tinta grafite e as três cores de marcador
+ * que o próprio vídeo usa nas setas: azul = estrutura/regra, verde =
+ * sequência/passo, vermelho = queda/trava. Aqui elas marcam o tipo de cada
+ * caixa de texto, não enfeitam.
+ */
+
+:root {
+  --board: #f4f6f7;
+  --sheet: #ffffff;
+  --ink: #22282e;
+  --ink-soft: #55606b;
+  --line: #d9dfe3;
+  --blue: #2f6bd8;
+  --green: #23965a;
+  --red: #d2423b;
+  --blue-wash: #e8effc;
+  --green-wash: #e5f4ec;
+  --red-wash: #fbeaea;
+  --code-bg: #eef1f3;
+
+  --font-body: 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-head: 'Bricolage Grotesque', 'Atkinson Hyperlegible', system-ui, sans-serif;
+  --font-hand: 'Patrick Hand', 'Comic Sans MS', cursive;
+  --font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
+
+  /* Escala modular 1,25 a partir de 17 px. */
+  --step-0: 1.0625rem;
+  --step-1: 1.33rem;
+  --step-2: 1.66rem;
+  --step-3: 2.07rem;
+  --step-4: 2.6rem;
+
+  --topbar: 60px;
+  --radius-small: 6px;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { scroll-padding-top: calc(var(--topbar) + 16px); }
+
+body {
+  margin: 0;
+  background: var(--board);
+  color: var(--ink);
+  font: 400 var(--step-0)/1.6 var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--blue); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; border-radius: 2px; }
+
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  background: var(--ink);
+  color: #fff;
+  padding: 8px 12px;
+  z-index: 50;
+}
+.skip:focus { top: 12px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* --- Barra do topo ------------------------------------------------------ */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--topbar);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px;
+  background: var(--sheet);
+  border-bottom: 1px solid var(--line);
+}
+
+.wordmark {
+  font: 400 1.9rem/1 var(--font-hand);
+  color: var(--ink);
+  text-decoration: none;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.wordmark span { font: 500 0.95rem var(--font-head); color: var(--ink-soft); }
+
+.menu-toggle { display: none; }
+
+.search { position: relative; margin-left: auto; width: min(420px, 50vw); }
+.search input {
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  background: var(--board);
+  font: inherit;
+  font-size: 0.95rem;
+  color: var(--ink);
+}
+.search input:focus { outline: none; border-color: var(--blue); background: var(--sheet); box-shadow: 0 0 0 3px var(--blue-wash); }
+.search-results {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  width: min(520px, 92vw);
+  max-height: 70vh;
+  overflow: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--sheet);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+  box-shadow: 0 12px 32px rgba(34, 40, 46, 0.14);
+}
+.search-results a { display: block; padding: 8px 10px; border-radius: 4px; color: var(--ink); text-decoration: none; }
+.search-results a:hover,
+.search-results a[aria-selected="true"] { background: var(--blue-wash); }
+.search-results strong { display: block; font-weight: 700; }
+.search-results small { display: block; color: var(--ink-soft); font-size: 0.85rem; line-height: 1.4; }
+.search-results .empty { padding: 10px; color: var(--ink-soft); }
+
+/* --- Estrutura ---------------------------------------------------------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 220px;
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--topbar);
+  height: calc(100vh - var(--topbar));
+  overflow: auto;
+  padding: 28px 16px 40px 24px;
+  border-right: 1px solid var(--line);
+}
+.nav-group + .nav-group { margin-top: 22px; }
+.nav-group-title { margin: 0 0 6px; font: 700 0.9rem var(--font-head); color: var(--ink); }
+.sidebar ul { list-style: none; margin: 0; padding: 0; }
+.sidebar a {
+  display: block;
+  padding: 5px 10px;
+  margin-left: -10px;
+  border-radius: 4px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+.sidebar a:hover { color: var(--ink); background: var(--sheet); }
+.sidebar a[aria-current="page"] { color: var(--ink); background: var(--sheet); box-shadow: inset 3px 0 0 var(--blue); font-weight: 700; }
+
+.content {
+  min-width: 0;
+  padding: 44px 56px 80px;
+  max-width: calc(72ch + 112px);
+}
+
+.toc {
+  position: sticky;
+  top: var(--topbar);
+  height: calc(100vh - var(--topbar));
+  overflow: auto;
+  padding: 34px 20px;
+  font-size: 0.875rem;
+}
+.toc-title { margin: 0 0 8px; font: 700 0.9rem var(--font-head); }
+.toc ul { list-style: none; margin: 0; padding: 0; border-left: 1px solid var(--line); }
+.toc a { display: block; padding: 3px 0 3px 12px; margin-left: -1px; color: var(--ink-soft); text-decoration: none; border-left: 2px solid transparent; }
+.toc .toc-3 a { padding-left: 24px; }
+.toc a:hover { color: var(--ink); }
+.toc a.is-active { color: var(--ink); border-left-color: var(--blue); }
+
+/* --- Texto -------------------------------------------------------------- */
+
+.content h1,
+.content h2,
+.content h3 { font-family: var(--font-head); line-height: 1.2; letter-spacing: -0.01em; position: relative; }
+.content h1 { font-size: var(--step-4); font-weight: 700; margin: 0 0 12px; }
+.content h2 { font-size: var(--step-2); font-weight: 700; margin: 2.4em 0 0.6em; padding-top: 0.4em; border-top: 1px solid var(--line); }
+.content h3 { font-size: var(--step-1); font-weight: 500; margin: 1.8em 0 0.4em; }
+.content h1 + .lede { font-size: var(--step-1); line-height: 1.45; color: var(--ink-soft); margin: 0 0 2em; max-width: 60ch; }
+.content p,
+.content li { max-width: 72ch; }
+.content ul,
+.content ol { padding-left: 1.3em; }
+.content li + li { margin-top: 0.3em; }
+.content strong { font-weight: 700; }
+.anchor { position: absolute; left: -1.1em; width: 1em; color: var(--line); text-decoration: none; opacity: 0; font-weight: 400; }
+h2:hover .anchor,
+h3:hover .anchor,
+.anchor:focus { opacity: 1; color: var(--ink-soft); }
+
+.content code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  overflow-wrap: anywhere;
+}
+
+.code { position: relative; margin: 1.2em 0; background: var(--ink); border-radius: var(--radius-small); }
+.code pre { margin: 0; padding: 18px 20px; overflow: auto; }
+.code code { background: none; padding: 0; color: #e9edf0; font-size: 0.86rem; line-height: 1.6; }
+.code-lang { position: absolute; top: 8px; left: 20px; font: 0.72rem var(--font-mono); color: #8d99a5; }
+.code:has(.code-lang) pre { padding-top: 30px; }
+.copy {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 9px;
+  border: 1px solid #4a545e;
+  border-radius: 4px;
+  background: transparent;
+  color: #c7d0d8;
+  font: 0.75rem var(--font-body);
+  cursor: pointer;
+}
+.copy:hover { color: #fff; border-color: #8d99a5; }
+
+.table { overflow-x: auto; margin: 1.2em 0; border: 1px solid var(--line); border-radius: var(--radius-small); background: var(--sheet); }
+.table table { border-collapse: collapse; width: 100%; font-size: 0.93rem; line-height: 1.45; }
+.table th,
+.table td { padding: 9px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+.table th { font: 700 0.88rem var(--font-head); background: var(--board); }
+.table tr:last-child td { border-bottom: 0; }
+
+/* Caixas: a cor diz o tipo, como as setas do vídeo. */
+.callout { margin: 1.4em 0; padding: 14px 18px; border-left: 4px solid var(--ink-soft); border-radius: 0 var(--radius-small) var(--radius-small) 0; background: var(--sheet); max-width: 72ch; }
+.callout > :last-child { margin-bottom: 0; }
+.callout-title { margin: 0 0 4px; font: 700 0.95rem var(--font-head); }
+.callout-regra { border-color: var(--blue); background: var(--blue-wash); }
+.callout-regra .callout-title { color: var(--blue); }
+.callout-passo { border-color: var(--green); background: var(--green-wash); }
+.callout-passo .callout-title { color: var(--green); }
+.callout-trava { border-color: var(--red); background: var(--red-wash); }
+.callout-trava .callout-title { color: var(--red); }
+
+/* Etapas do pipeline: é uma sequência de verdade, então leva número. */
+.steps { list-style: none; counter-reset: step; padding: 0; margin: 1.4em 0; position: relative; }
+.steps::before { content: ''; position: absolute; left: 15px; top: 10px; bottom: 10px; width: 2px; background: var(--green); opacity: 0.35; }
+.steps li { counter-increment: step; position: relative; padding: 0 0 14px 48px; max-width: 72ch; }
+.steps li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--sheet);
+  border: 2px solid var(--green);
+  color: var(--green);
+  font: 700 0.9rem var(--font-head);
+}
+.steps li strong { display: block; font-family: var(--font-head); padding-top: 4px; }
+.steps li span { display: block; color: var(--ink-soft); font-size: 0.97rem; }
+
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 4em; padding-top: 1.5em; border-top: 1px solid var(--line); }
+.pager a { display: block; padding: 12px 16px; border: 1px solid var(--line); border-radius: var(--radius-small); background: var(--sheet); color: var(--ink); text-decoration: none; font-weight: 700; }
+.pager a:hover { border-color: var(--blue); }
+.pager span { display: block; font-weight: 400; font-size: 0.85rem; color: var(--ink-soft); }
+.pager-next { text-align: right; grid-column: 2; }
+
+/* --- Página inicial: a frase escrita à mão --------------------------------- */
+
+.hero { padding: 24px 0 8px; }
+.hero-line {
+  margin: 0;
+  font: 400 clamp(2.6rem, 6vw, 4.2rem)/1.05 var(--font-hand);
+  color: var(--ink);
+  max-width: 16ch;
+}
+.hero-line .letter { display: inline-block; clip-path: inset(-25% 100% -25% -25%); animation: write 120ms steps(4, end) forwards; animation-delay: calc(var(--i) * 45ms); }
+.hero-line .space { display: inline-block; width: 0.28em; }
+.hero-underline { display: block; width: min(560px, 90%); height: 22px; margin-top: 6px; overflow: visible; }
+.hero-underline path { fill: none; stroke: var(--blue); stroke-width: 7; stroke-linecap: round; stroke-dasharray: 600; stroke-dashoffset: 600; animation: draw 700ms ease-out forwards; animation-delay: var(--underline-delay, 1.8s); }
+/* Margem negativa: as letras do Patrick Hand saem da própria caixa. */
+@keyframes write { to { clip-path: inset(-25% -25% -25% -25%); } }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+.hero-sub { font-size: var(--step-1); line-height: 1.45; color: var(--ink-soft); max-width: 56ch; margin: 22px 0 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-line .letter { animation: none; clip-path: none; }
+  .hero-underline path { animation: none; stroke-dashoffset: 0; }
+}
+
+/* --- Telas menores -------------------------------------------------------- */
+
+@media (max-width: 1180px) {
+  .shell { grid-template-columns: 240px minmax(0, 1fr); }
+  .toc { display: none; }
+}
+
+@media (max-width: 820px) {
+  .topbar { gap: 12px; padding: 0 16px; }
+  .menu-toggle {
+    display: block;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-small);
+    background: var(--sheet);
+    font: 700 0.9rem var(--font-head);
+    color: var(--ink);
+  }
+  .search { width: auto; flex: 1; }
+  .shell { display: block; }
+  .sidebar {
+    display: none;
+    position: fixed;
+    inset: var(--topbar) 0 0 0;
+    height: auto;
+    z-index: 15;
+    background: var(--board);
+    border-right: 0;
+    padding: 20px 16px;
+  }
+  .sidebar.is-open { display: block; }
+  .content { padding: 28px 16px 60px; }
+  .content h1 { font-size: var(--step-3); }
+  .anchor { display: none; }
+  .pager { grid-template-columns: 1fr; }
+  .pager-next { grid-column: 1; }
+  .wordmark span { display: none; }
+}

@@ -1,0 +1,16 @@
+{
+  "name": "vellum-docs",
+  "version": "1.0.0",
+  "description": "Documentação do Vellum (motor de vídeos em quadro branco)",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "node scripts/build.mjs && node scripts/serve.mjs",
+    "deploy": "node scripts/deploy.mjs"
+  },
+  "license": "UNLICENSED",
+  "type": "module",
+  "devDependencies": {
+    "marked": "^14.1.4"
+  },
+  "private": true
+}

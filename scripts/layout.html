@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}}</title>
+<meta name="description" content="{{description}}">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=JetBrains+Mono:wght@400;600&family=Patrick+Hand&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="{{bodyClass}}">
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<header class="topbar">
+  <a class="wordmark" href="./" aria-label="Vellum, início da documentação">Vellum<span>docs</span></a>
+  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="sidebar">Menu</button>
+  <div class="search" role="search">
+    <label class="visually-hidden" for="search-input">Buscar na documentação</label>
+    <input id="search-input" type="search" placeholder="Buscar (Ctrl K)" autocomplete="off">
+    <ul id="search-results" class="search-results" hidden></ul>
+  </div>
+</header>
+<div class="shell">
+  <nav id="sidebar" class="sidebar" aria-label="Documentação">{{nav}}</nav>
+  <main id="conteudo" class="content">
+    {{pageTitle}}
+    {{content}}
+    {{pager}}
+  </main>
+  <aside class="toc" aria-label="Nesta página">{{toc}}</aside>
+</div>
+<script src="assets/site.js" defer></script>
+</body>
+</html>
