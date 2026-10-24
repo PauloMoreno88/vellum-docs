@@ -40,6 +40,15 @@ Quando o diretor precisa de uma imagem que não existe, ele descreve o que preci
 5. Gere o vídeo de novo.
 :::
 
+### Completar um rascunho com as imagens aprovadas
+
+Um vídeo que saiu como **rascunho** por falta de imagem não precisa ser gerado de novo. Não importa onde a imagem foi aprovada: na Galeria, no editor (gerada ou importada) ou na tela de progresso, depois que o render terminou. Ao abrir o editor daquele vídeo, cada imagem aprovada é colocada no lugar do aviso "Falta imagem" e vira uma correção pendente. Basta clicar em **Aplicar**.
+
+- No quadro, a imagem aparece como "imagem nova, entra ao aplicar" só quando ela de fato vai entrar no vídeo.
+- Se o editor não conseguir colocar a imagem (a página mudou, ou a imagem já está nela), o painel do elemento diz o motivo e oferece **Colocar no vídeo** ou **Usar outra do acervo**.
+- Se você desfizer a troca, ela não volta sozinha.
+- Enquanto só faltarem imagens, o botão do alto mostra **Faltam N imagens** e leva até a primeira, em vez de renderizar um vídeo igual.
+
 ## Regras de cada imagem
 
 | Regra | Detalhe |
