@@ -48,6 +48,11 @@ Um vídeo que saiu como **rascunho** por falta de imagem não precisa ser gerado
 - Se o editor não conseguir colocar a imagem (a página mudou, ou a imagem já está nela), o painel do elemento diz o motivo e oferece **Colocar no vídeo** ou **Usar outra do acervo**.
 - Se você desfizer a troca, ela não volta sozinha.
 - Enquanto só faltarem imagens, o botão do alto mostra **Faltam N imagens** e leva até a primeira, em vez de renderizar um vídeo igual.
+- Quando a folha desliza só um pouco para a página seguinte, o desenho que fica na borda é uma cópia da página anterior. Trocar a imagem nele troca a imagem na página de onde ele vem, e as duas páginas mostram a mesma. Para tirar esse desenho, remova-o na página de origem.
+
+### Correção que não pôde ser aplicada
+
+Se uma correção não encontra mais o elemento (a página mudou depois de outra correção, por exemplo), o **Aplicar** não para. O vídeo sai com todas as outras correções, fica como **rascunho**, e a página mostra **Correção não aplicada**, com o motivo e um botão para selecionar o elemento. Ajuste ou desfaça essa correção e aplique de novo. Se o vídeo já era final, ele continua no histórico: a versão corrigida entra como um rascunho separado.
 
 ## Regras de cada imagem
 

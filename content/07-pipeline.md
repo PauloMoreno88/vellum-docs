@@ -63,3 +63,9 @@ A prévia prepara o plano completo e limita só o render ao primeiro minuto. Por
 | Só composição ou render | Nada pago: transcrição e análise vêm do cache |
 
 Quando uma imagem pedida pelo diretor é importada com a descrição compatível, o motor tenta atualizar a decisão pendente sem pagar uma leitura completa do roteiro.
+
+## Render em partes
+
+O vídeo é renderizado página por página, e cada página fica guardada no projeto do vídeo. Ao aplicar correções, só as páginas que mudaram (e a transição para a página seguinte) são renderizadas de novo. As outras são reaproveitadas, mesmo depois de uma atualização do app.
+
+Cada página é identificada pelo que aparece nela: os desenhos, os textos, o conteúdo das imagens e o código do render. A data dos arquivos de imagem não conta. Por isso, reinstalar o acervo ou atualizar o app não obriga a renderizar o vídeo inteiro de novo.
